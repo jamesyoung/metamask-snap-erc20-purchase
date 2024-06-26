@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect to Local Snap</title>
+</head>
+<body>
+    <h1>Connect to Local Snap</h1>
+    <button id="connect">Connect</button>
+
+    <script>
+        const connectButton = document.getElementById('connect');
+        
+        connectButton.addEventListener('click', async () => {
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_requestSnaps',
+                    params: {
+                        'local:http://localhost:8080': {}
+                    }
+                });
+                alert('Snap connected successfully!');
+            } catch (err) {
+                console.error(err);
+                alert('Failed to connect snap: ' + err.message);
+            }
+        });
+    </script>
+</body>
+</html>

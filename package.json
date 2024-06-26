@@ -1,0 +1,27 @@
+{
+  "name": "metamask-snap-erc20-purchase",
+  "version": "1.0.0",
+  "description": "A Metamask snap for purchasing ERC20 tokens from X posts",
+  "main": "src/index.js",
+  "files": [
+    "dist/",
+    "images/",
+    "snap.manifest.json"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "mm-snap build",
+    "serve": "node serve.js",
+    "start": "mm-snap watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@metamask/snaps-sdk": "^6.0.0",
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "@metamask/snaps-cli": "^6.2.1"
+  }
+}

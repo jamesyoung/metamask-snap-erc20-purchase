@@ -16,8 +16,8 @@ This project is currently in development. Basic setup and connectivity with Meta
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/your-repo-name.git
-   cd your-repo-name
+   git clone https://github.com/jamesyoung/metamask-snap-erc20-purchase
+   cd metamask-snap-erc20-purchase
    ```
 
 2. Install dependencies:
@@ -81,11 +81,3 @@ Replace 'hello' with other implemented methods as needed.
 - Implement error handling
 - Add comprehensive testing
 - Prepare for publication
-
-## Contributing
-
-[Add contribution guidelines here]
-
-## License
-
-[Add license information here]

@@ -1,23 +1,31 @@
-# ERC20 Purchase MetaMask Snap
+# ERC20 Token Manager Snap
 
-This MetaMask Snap allows users to purchase ERC20 tokens directly from X (formerly Twitter) posts.
+## WARNING
 
-## Project Status
+Do not use.
 
-This project is currently in development. Basic setup and connectivity with MetaMask Flask have been established.
+## Overview
+
+The ERC20 Token Manager Snap is a MetaMask Snap that allows users to interact with ERC20 tokens directly from their MetaMask wallet. This snap provides functionality to view token details, approve token spending, and transfer tokens.
+
+## Features
+
+- Get token details (name, symbol, decimals)
+- Approve token spending
+- Transfer tokens
+- User-friendly dialogs for confirmations and notifications
 
 ## Prerequisites
 
-- Node.js (v14 or later recommended)
-- npm (usually comes with Node.js)
-- MetaMask Flask (Developer version of MetaMask that supports Snaps)
+- MetaMask Flask (the developer version of MetaMask that supports Snaps)
+- Node.js and npm
 
-## Setup
+## Installation
 
 1. Clone the repository:
    ```
-   git clone https://github.com/jamesyoung/metamask-snap-erc20-purchase
-   cd metamask-snap-erc20-purchase
+   git clone https://github.com/your-username/erc20-token-manager-snap.git
+   cd erc20-token-manager-snap
    ```
 
 2. Install dependencies:
@@ -25,59 +33,47 @@ This project is currently in development. Basic setup and connectivity with Meta
    npm install
    ```
 
-3. Build the project:
+3. Build the snap:
    ```
    npm run build
    ```
 
-4. Start the development server:
+4. Serve the snap locally:
    ```
    npm run serve
    ```
 
-## Connecting the Snap
+## Usage
 
-1. Ensure MetaMask Flask is installed in your browser.
-2. Navigate to `http://localhost:8000` in your browser (assuming you're using the provided `serve.js`).
-3. Click the "Connect" button on the page.
-4. MetaMask Flask should prompt you to connect to the snap.
+1. Ensure MetaMask Flask is installed and running in your browser.
+
+2. Navigate to `http://localhost:8000` in your browser.
+
+3. Click "Connect to MetaMask" to connect the snap to your MetaMask wallet.
+
+4. Use the provided buttons to interact with ERC20 tokens:
+   - "Get Token Details": Retrieve information about a specific ERC20 token.
+   - "Approve Token": Approve spending of a token by another address.
+   - "Transfer Token": Transfer tokens to another address.
 
 ## Development
 
-The main snap code is located in `src/index.js`. After making changes:
+To make changes to the snap:
 
-1. Rebuild the project:
+1. Modify the code in `src/index.js`.
+2. Rebuild the snap:
    ```
    npm run build
    ```
-
-2. Restart the server:
+3. Restart the server:
    ```
    npm run serve
    ```
 
-3. Refresh the connection page and reconnect the snap if necessary.
-
 ## Testing
 
-You can test the snap's functionality using the browser console:
+(Add information about your testing setup and how to run tests)
 
-```javascript
-await ethereum.request({
-  method: 'wallet_invokeSnap',
-  params: {
-    snapId: 'local:http://localhost:8080',
-    request: { method: 'hello' }
-  }
-});
-```
+## Security Considerations
 
-Replace 'hello' with other implemented methods as needed.
-
-## Next Steps
-
-- Implement ERC20 token purchase functionality
-- Add user interface dialogs
-- Implement error handling
-- Add comprehensive testing
-- Prepare for publication
+This snap interacts with ERC20 tokens and can initiate transactions. Always verify the token addresses and transaction details before confirming any operations.

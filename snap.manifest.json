@@ -1,12 +1,12 @@
 {
   "version": "1.0.0",
-  "description": "An example Snap for purchasing ERC20 tokens.",
-  "proposedName": "ERC20 Purchase Snap",
+  "description": "A snap for managing ERC20 tokens",
+  "proposedName": "ERC20 Token Manager",
   "source": {
-    "shasum": "AKIqg101gBxYHHde7lsd70sS1L1MBtbH97mwyy3ut7U=",
+    "shasum": "3rgzxdMUr/oh7SfppC/obYeJKRvS9XcHUVdcOtlwTaU=",
     "location": {
       "npm": {
-        "filePath": "bundle.js",
+        "filePath": "dist/bundle.js",
         "iconPath": "images/icon.svg",
         "packageName": "metamask-snap-erc20-purchase",
         "registry": "https://registry.npmjs.org/"
@@ -15,6 +15,7 @@
   },
   "initialPermissions": {
     "snap_dialog": {},
+    "snap_manageState": {},
     "endowment:ethereum-provider": {},
     "endowment:network-access": {},
     "endowment:rpc": {

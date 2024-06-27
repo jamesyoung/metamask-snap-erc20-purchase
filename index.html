@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERC20 Token Manager</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #2980b9;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result, #debug {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        #debug {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ERC20 Token Manager</h1>
+        
+        <div class="section">
+            <h2>Connect to MetaMask</h2>
+            <button id="connectButton">Connect to MetaMask</button>
+        </div>
+
+        <button id="helloButton">Say Hello</button>
+
+        <div class="section">
+            <h2>Token Details</h2>
+            <input id="tokenAddressInput" type="text" placeholder="Enter ERC20 token address">
+            <button id="getTokenDetailsButton">Get Token Details</button>
+        </div>
+
+        <div class="section">
+            <h2>Token Actions</h2>
+            <input id="amountInput" type="text" placeholder="Enter amount">
+            <input id="recipientInput" type="text" placeholder="Enter recipient address (for transfer)">
+            <button id="approveTokenButton">Approve Token</button>
+            <button id="transferTokenButton">Transfer Token</button>
+        </div>
+
+        <div id="result"></div>
+        <div id="debug"></div>
+    </div>
+
+    <script>
+        const snapId = 'local:http://localhost:8000';
+        let userAddress = '';
+        
+        function log(message, isError = false) {
+            console.log(message);
+            const debugElement = document.getElementById('debug');
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            if (isError) {
+                messageElement.classList.add('error');
+            }
+            debugElement.appendChild(messageElement);
+            debugElement.scrollTop = debugElement.scrollHeight;
+        }
+
+        async function connect() {
+            log('Connect button clicked');
+            try {
+                log('Connecting to MetaMask...');
+                await ethereum.request({
+                    method: 'wallet_requestSnaps',
+                    params: {
+                        [snapId]: {}
+                    }
+                });
+                const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+                userAddress = accounts[0];
+                document.getElementById('result').textContent = `Connected to MetaMask and snap! Your address: ${userAddress}`;
+                log('Connected successfully.');
+            } catch (e) {
+                log(`Connection error: ${e.message}`, true);
+                document.getElementById('result').textContent = `Error: ${e.message}`;
+            }
+        }
+
+        async function sayHello() {
+            try {
+            const result = await ethereum.request({
+                method: 'wallet_invokeSnap',
+                params: {
+                snapId: snapId,
+                request: {
+                    method: 'hello'
+                }
+                }
+            });
+            console.log('Hello result:', result);
+            } catch (e) {
+            console.error('Hello error:', e);
+            }
+        }
+
+        async function getTokenDetails() {
+            log('Get Token Details button clicked');
+            try {
+                const tokenAddress = document.getElementById('tokenAddressInput').value;
+                if (!tokenAddress) {
+                    throw new Error('Please enter a token address');
+                }
+                log('Getting token details...');
+                const result = await ethereum.request({
+                    method: 'wallet_invokeSnap',
+                    params: {
+                        snapId: snapId,
+                        request: {
+                            method: 'getTokenDetails',
+                            params: { tokenAddress: tokenAddress }
+                        }
+                    }
+                });
+                log('Token details retrieved successfully.');
+                document.getElementById('result').textContent = `Token Details: ${JSON.stringify(result, null, 2)}`;
+            } catch (e) {
+                log(`Get token details error: ${e.message}`, true);
+                document.getElementById('result').textContent = `Error: ${e.message}`;
+            }
+        }
+
+        async function approveToken() {
+            log('Approve Token button clicked');
+            try {
+                if (!userAddress) {
+                    throw new Error('Please connect to MetaMask first');
+                }
+                const tokenAddress = document.getElementById('tokenAddressInput').value;
+                const amount = document.getElementById('amountInput').value;
+                if (!tokenAddress || !amount) {
+                    throw new Error('Please enter both token address and amount');
+                }
+                log('Initiating token approval...');
+                const result = await ethereum.request({
+                    method: 'wallet_invokeSnap',
+                    params: {
+                        snapId: snapId,
+                        request: {
+                            method: 'approveToken',
+                            params: {
+                                tokenAddress: tokenAddress,
+                                amount: amount,
+                                spender: userAddress // Using user's address as spender
+                            }
+                        }
+                    }
+                });
+                log('Approval completed.');
+                document.getElementById('result').textContent = `Approval Result: ${result}`;
+            } catch (e) {
+                log(`Approve token error: ${e.message}`, true);
+                document.getElementById('result').textContent = `Error: ${e.message}`;
+            }
+        }
+
+        async function transferToken() {
+            log('Transfer Token button clicked');
+            try {
+                if (!userAddress) {
+                    throw new Error('Please connect to MetaMask first');
+                }
+                const tokenAddress = document.getElementById('tokenAddressInput').value;
+                const amount = document.getElementById('amountInput').value;
+                const recipient = document.getElementById('recipientInput').value;
+                if (!tokenAddress || !amount || !recipient) {
+                    throw new Error('Please enter token address, amount, and recipient');
+                }
+                log('Initiating token transfer...');
+                const result = await ethereum.request({
+                    method: 'wallet_invokeSnap',
+                    params: {
+                        snapId: snapId,
+                        request: {
+                            method: 'transferToken',
+                            params: {
+                                tokenAddress: tokenAddress,
+                                amount: amount,
+                                recipient: recipient
+                            }
+                        }
+                    }
+                });
+                log('Transfer completed.');
+                document.getElementById('result').textContent = `Transfer Result: ${result}`;
+            } catch (e) {
+                log(`Transfer token error: ${e.message}`, true);
+                document.getElementById('result').textContent = `Error: ${e.message}`;
+            }
+        }
+
+        document.getElementById('connectButton').addEventListener('click', connect);
+        document.getElementById('helloButton').addEventListener('click', sayHello);
+        document.getElementById('getTokenDetailsButton').addEventListener('click', getTokenDetails);
+        document.getElementById('approveTokenButton').addEventListener('click', approveToken);
+        document.getElementById('transferTokenButton').addEventListener('click', transferToken);
+
+        log('Page loaded. Ready for interaction.');
+    </script>
+</body>
+</html>
